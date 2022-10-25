@@ -1,5 +1,13 @@
 export default function Home() {
   return (
-    <p>page content populating main tag in layout</p>
+    <button
+      onClick={e => {
+        fetch('/api/test').then(res => {
+          return res.json()
+        }).then(json => {
+          console.log(json)
+        })
+      }}
+    >test</button>
   )
 }
