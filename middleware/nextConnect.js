@@ -1,12 +1,16 @@
 import nc from 'next-connect'
 import session from 'express-session'
-import dbConnect from '../db/connect';
-import MongoStore from 'connect-mongo';
+const MySQLStore = require('express-mysql-session')(session)
 
-async function dbClient(){
-  const db = await dbConnect();
-  return db.connection.getClient();
-}
+const options = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+	port: process.env.DB_PORT,
+};
+
+const sessionStore = new MySQLStore(options);
 
 export default function nextConnect(){
   return nc({
@@ -26,8 +30,6 @@ export default function nextConnect(){
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
-      clientPromise: dbClient()
-    })
+    store: sessionStore
   }))
 }

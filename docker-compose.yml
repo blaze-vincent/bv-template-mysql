@@ -1,15 +1,19 @@
 version: '3.3'
 
 services:
-  mongo:
-    container_name: template-mongo
-    image: mongo:latest
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
     restart: always
-    ports:
-      - 27017:27017
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: root-db
+      MYSQL_DATABASE: 'templatedb'
+      MYSQL_USER: 'api_user'
+      MYSQL_PASSWORD: 'changeme'
+      MYSQL_ROOT_PASSWORD: 'changeme'
+    ports:
+      - '3306:3306'
     volumes:
-      - ./docker-entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./db/vol:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d
+volumes:
+  db:
